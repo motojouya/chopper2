@@ -1,0 +1,21 @@
+{
+  "name": "chopper2",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node_modules/.bin/forever index.js",
+    "stop": "node_modules/.bin/forever stop index.js",
+    "restart": "npm stop && npm start"
+  },
+  "author": "Takuya Sugiyama (@motojouya)",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "cookie": "^0.3.1",
+    "cookie-parser": "^1.4.4",
+    "express": "^4.16.4",
+    "forever": "^0.15.3",
+    "yarn": "^1.13.0"
+  }
+}
