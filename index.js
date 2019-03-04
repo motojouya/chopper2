@@ -17,7 +17,7 @@ process.on('uncaughtException', (err) => {
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded());
 
-app.use(express.static('static'));
+app.use(express.static('docs'));
 
 app.use((req, res) => {
   res.status(404);
