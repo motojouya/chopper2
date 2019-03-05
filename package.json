@@ -6,16 +6,22 @@
   "scripts": {
     "start": "node_modules/.bin/forever index.js",
     "stop": "node_modules/.bin/forever stop index.js",
-    "restart": "npm stop && npm start"
+    "restart": "npm stop && npm start",
+    "scrape": "node scripts/scrape.js"
   },
   "author": "Takuya Sugiyama (@motojouya)",
   "license": "MIT",
   "dependencies": {
+    "@serverless-chrome/lambda": "^1.0.0-55",
     "body-parser": "^1.18.3",
+    "chrome-remote-interface": "^0.27.1",
     "cookie": "^0.3.1",
     "cookie-parser": "^1.4.4",
     "express": "^4.16.4",
     "forever": "^0.15.3",
+    "puppeteer": "^1.13.0",
+    "puppeteer-core": "^1.13.0",
+    "readline-sync": "^1.4.9",
     "yarn": "^1.13.0"
   }
 }

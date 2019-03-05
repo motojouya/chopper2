@@ -3,5 +3,11 @@
 
 ```
 docker build ./ -t motojouya/chopper2
-docker run -it -e PORT=3000 -p 8080:3000 motojouya/chopper2 /bin/bash
+docker run -it -e PORT=3000 -p 8080:3000 -v /path/to/your/directory:/usr/local/src/chopper2 motojouya/chopper2 /bin/bash
+yarn install
+```
+
+for developing
+```
+npm start
 ```
