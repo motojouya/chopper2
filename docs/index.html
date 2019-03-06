@@ -7,51 +7,27 @@
   <title>Chopper2</title>
 </head>
 <body>
-  <header>
-    <div><!--  style={{ width: '100%', height: '100%', textAlign: 'center' }} -->
-      <input id="url_input" />
-    </div>
-  </header>
-  <main>
-    <ul id="recipe_list"></ul>
-  </main>
+  <div id="app"></div>
   <script src="https://unpkg.com/react@16/umd/react.production.min.js"></script>
   <script src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js"></script>
   <script src="https://unpkg.com/babel-standalone@6.26.0/babel.min.js"></script>
-  <script type="module" src="app.mjs"></script>
-  <script>
-  import scrape from './scrape.mjs';
-  import funcs from './recipe.mjs';
+  <script type="text/babel">
+  // import renderRecipe from './recipe.mjs';
 
-  const createListItem = articleUrl => {
+  const querys = search => {
 
-    const listItem = document.createElement('li');
-    const deleteListItem = () => listItem.parentNode.removeChild(listItem);
+    if (!search) {
+      return {};
+    }
 
-    const iframe = document.createElement('iframe');
-    iframe.src = articleUrl;
-
-    iframe.onload = event => {
-      const recipe = scrape(iframe.contentWindow.document);
-      iframe.parentNode.removeChild(iframe);
-      ReactDOM.render(renderRecipe(recipe, deleteListItem), listItem);
-    };
-    listItem.appendChild(iframe);
-
-    document.getElementById('recipe_list').appendChild(listItem);
+    return search.slice(1).split('&').reduce((acc, query) => {
+      const splited = query.split('=');
+      acc[splited[0]] = splited[1];
+      return acc;
+    }, {});
   };
 
-  document.addEventListener('DOMContentLoaded', event => {
-    document.getElementById('url_input').addEventListener('keyUp', event => {
-
-      const value = e.currentTarget.value;
-      console.log('value', e.currentTarget.value);
-      if (e.keyCode == 13 && value) {
-        createListItem(value);
-      }
-
-    });
-  });
+  // document.addEventListener('DOMContentLoaded', event => {});
 
   const calculateColumnWidth = columns => {
     switch (columns) {
@@ -64,6 +40,83 @@
       default: return 1;
     }
   };
+
+  const renderRecipe = recipes => {
+    return (
+      <ul>
+        {
+          recipes.map(recipe => {
+            return (<li><Recipe recipe={recipe} /></li>);
+          })
+        }
+      </ul>
+    );
+  }
+
+  const Recipe = ({ recipe }) => {
+    return (
+      <div>
+        <h2>{ recipe.title }</h2>
+        <a href={recipe.url}>{ recipe.url }</a>
+        { recipe.info &&
+          <div>
+            <h3>info</h3>
+            <dl>
+              <dt>時間</dt>
+              <dd>{ recipe.info.time } 分</dd>
+              <dt>人数</dt>
+              <dd>{ recipe.info.amount } 人前</dd>
+              <dt>冷蔵保存</dt>
+              <dd>{ recipe.info.keepable } 日</dd>
+            </dl>
+          </div>
+        }
+        { recipe.ingredients &&
+          <div>
+            <h3>材料</h3>
+            <dl>{
+              recipe.ingredients.map(ingredient => {
+                return (
+                  <React.Fragment>
+                    <dt>{ ingredient.item }</dt>
+                    <dd>{ ingredient.amount }</dd>
+                  </React.Fragment>
+                );
+              })
+            }</dl>
+          </div>
+        }
+        { recipe.processes &&
+          <div>
+            <h3>手順</h3>
+            <ol>{
+              recipe.processes.map(order => {
+                return (
+                  <li>{ order }</li>
+                );
+              })
+            }</ol>
+          </div>
+        }
+        { recipe.point &&
+          <div>
+            <h3>ポイント</h3>
+            <p>{ recipe.point }</p>
+          </div>
+        }
+      </div>
+    );
+  };
+
+  const queryObj = querys(window.location.search);
+  console.log(queryObj);
+  if (queryObj.w) {
+    fetch(`/recipes/${queryObj.w}.json`)
+      .then(res => res.json())
+      .then(recipes => {
+        ReactDOM.render(renderRecipe(recipes), document.getElementById('app'));
+      });
+  }
   </script>
 </body>
 </html>

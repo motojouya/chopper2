@@ -1,15 +1,23 @@
 
 module.exports = () => {
 
+  const getTextContent = element => {
+    if (element) {
+      return element.textContent;
+    } else {
+      return '';
+    }
+  };
+
   const informationNameMap = {
     '調理時間': 'time',
     '冷蔵保存': 'keepable',
     '人数': 'amount',
   };
 
-  const title = document.querySelector('h1.entry-title').textContent;
+  const title = getTextContent(document.querySelector('h1.entry-title'));
 
-  const infoText = document.querySelectorAll('div.entry-content > p')[2].textContent;
+  const infoText = getTextContent(document.querySelectorAll('div.entry-content > p')[2]);
   const info = infoText.split('　').filter(text => text).reduce((acc, text) => {
     const [name, value] = text.split('：');
     acc[informationNameMap[name]] = value;
@@ -25,7 +33,7 @@ module.exports = () => {
 
   const processes = Array.from(document.querySelectorAll('h3.process + ol > li')).map(process => process.textContent.split('<img')[0]);
 
-  const point = document.querySelector('h3.point + p').textContent;
+  const point = getTextContent(document.querySelector('h3.point + p'));
 
   return {
     title,
