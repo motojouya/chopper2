@@ -111,7 +111,7 @@
   const queryObj = querys(window.location.search);
   console.log(queryObj);
   if (queryObj.w) {
-    fetch(`/recipes/${queryObj.w}.json`)
+    fetch(`recipes/${queryObj.w}.json`)
       .then(res => res.json())
       .then(recipes => {
         ReactDOM.render(renderRecipe(recipes), document.getElementById('app'));
