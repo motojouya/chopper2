@@ -18,7 +18,10 @@ const execute = async (url, scraper) => {
 
     await page.goto(url, { waitUntil: 'domcontentloaded' });
 
-    return await page.evaluate(scraper);
+    const result = await page.evaluate(scraper);
+    result.url = url;
+
+    return result;
 
   } catch (err) {
     console.log(err);
