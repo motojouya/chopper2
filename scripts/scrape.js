@@ -4,8 +4,22 @@ const readlineSync = require('readline-sync');
 const puppeteer = require('puppeteer');
 
 const mariegohan = require('./mariegohan')
+const cookien = require('./cookien')
+const cookpad = require('./cookpad')
 
-const execute = async (url, scraper) => {
+const selectScraper = url => {
+  if (url.includes('mariegohan')) {
+    return mariegohan;
+  } else if (url.includes('cookien')) {
+    return cookien;
+  } else if (url.includes('cookpad')) {
+    return cookpad;
+  } else {
+    return;
+  }
+};
+
+const execute = async (scraper, url) => {
 
   try {
     const browser = await puppeteer.launch({
@@ -44,7 +58,7 @@ const scrape = () => {
     }
   } while (recipe);
 
-  Promise.all(urls.map(url => execute(url, mariegohan))).then(results => {
+  Promise.all(urls.map(url => execute(selectScraper(url), url))).then(results => {
 
     try {
       fs.writeFileSync(`docs/recipes/${date}.json`, JSON.stringify(results));
